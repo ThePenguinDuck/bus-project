@@ -1,18 +1,38 @@
-﻿<!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+﻿<html xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml">
 <head>
-    <meta charset="utf-8" />
-    <title></title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=yes" />
+    <script type="text/javascript"
+            src="http://maps.google.com.mx/maps/api/js?key=AIzaSyBQ7qdQ5dgz0OtApHpIYJUSJrcNDem0z3U&sensor=false&language="en""></script>
+    <script type="text/javascript">
+        function initialize() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function (p) {
+                    var latlng = new google.maps.LatLng(p.coords.latitude, p.coords.longitude);
+                    var myOptions = {
+                        center: latlng,
+                        zoom: 13,
+                        mapTypeId: google.maps.MapTypeId.ROADMAP
+                    };
+                    var map = new google.maps.Map(document.getElementById("map_canvas"), myOptions);
+                    var marker = new google.maps.Marker({
+                        position: latlng,
+                        map: map,
+                        title: "<div style = 'height:60px;width:200px'><b>Uw locatie:</b><br />Latitude: " + p.coords.latitude + "<br />Longitude: " + p.coords.longitude
+                    });
+                    google.maps.event.addListener(marker, "klik", function (e) {
+                        var infoWindow = new google.maps.InfoWindow();
+                        infoWindow.setContent(marker.title);
+                        infoWindow.open(map, marker);
+                    });
+                });
+            } else {
+                alert('Google maps werkt niet op deze browser.');
+            }
+        }
+
+    </script>
 </head>
-<body>
-    <p>map</p>
-    <form id="map" runat="server">
-        <div>
-            
-            <iframe src="https://maps.google.com/maps/embed?pb=AIzaSyBQ7qdQ5dgz0OtApHpIYJUSJrcNDem0z3U" width="600" height="450" frameborder="0" style="border:0"> </iframe>
-
-        </div>
-    </form>
-
+<body onload="initialize()">
+    <div id="map_canvas" style="width:100%; height:100%"></div>
 </body>
-</html>
+</html>  
